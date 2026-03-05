@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=5"
+    />
+    <title>Noor · نور · The Holy Quran</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Scheherazade+New:wght@400;500;600;700&family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="quran.css" />
+  </head>
+  <body>
+    <!-- ╔══════════════════════════════════════════╗ -->
+    <!-- ║           SPLASH SCREEN                  ║ -->
+    <!-- ╚══════════════════════════════════════════╝ -->
+    <div id="splash">
+      <div class="splash-star-field" id="starField"></div>
+      <svg class="splash-geo" viewBox="0 0 100 100">
+        <polygon
+          points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35"
+          fill="none"
+          stroke="rgba(201,168,76,.35)"
+          stroke-width="1"
+        />
+        <polygon
+          points="50,15 58,37 82,37 64,51 72,75 50,61 28,75 36,51 18,37 42,37"
+          fill="none"
+          stroke="rgba(201,168,76,.55)"
+          stroke-width="1"
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r="38"
+          fill="none"
+          stroke="rgba(201,168,76,.18)"
+          stroke-width="1"
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r="28"
+          fill="none"
+          stroke="rgba(201,168,76,.25)"
+          stroke-width=".8"
+        />
+      </svg>
+      <div
+        class="splash-inner-logo"
+        style="
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) translate(0, -55px);
+        "
+      >
+        نور
+      </div>
+      <div class="splash-title">NOOR</div>
+      <div class="splash-arabic">القرآن الكريم</div>
+      <div class="splash-tagline">The Holy Quran · Light for Humanity</div>
+      <div class="splash-progress-track">
+        <div class="splash-progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <!-- KEYS HINT -->
+    <div
+      class="keys-hint"
+      onclick="openModal('shortcutsModal')"
+      data-tip="Keyboard shortcuts"
+    >
+      ⌨ Shortcuts
+    </div>
+
+    <!-- MOBILE NAV -->
+    <div class="mobile-nav">
+      <div class="mob-btn active" onclick="switchTab('read')">
+        <i class="fa-regular fa-book-open"></i>Read
+      </div>
+      <div class="mob-btn" onclick="switchTab('prayer')">
+        <i class="fa-solid fa-mosque"></i>Prayer
+      </div>
+      <div class="mob-btn" onclick="switchTab('dhikr')">
+        <i class="fa-solid fa-circle-dot"></i>Dhikr
+      </div>
+      <div class="mob-btn" onclick="switchTab('tools')">
+        <i class="fa-solid fa-compass"></i>Tools
+      </div>
+      <div class="mob-btn" onclick="switchTab('bm')">
+        <i class="fa-regular fa-bookmark"></i>Saved
+      </div>
+    </div>
+
+    <!-- ╔══════════════════════════════════════════╗ -->
+    <!-- ║               MODALS                     ║ -->
+    <!-- ╚══════════════════════════════════════════╝ -->
+
+    <!-- TAFSIR MODAL -->
+    <div
+      class="modal-bg"
+      id="tafsirModal"
+      onclick="if (event.target === this) closeModal('tafsirModal');"
+    >
+      <div class="modal">
+        <div class="modal-head">
+          <h3>📖 Tafsir & Commentary</h3>
+          <button class="modal-close" onclick="closeModal('tafsirModal')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body" id="tafsirBody"><p>Loading…</p></div>
+      </div>
+    </div>
+
+    <!-- ASMA UL HUSNA MODAL -->
+    <div
+      class="modal-bg"
+      id="asmaModal"
+      onclick="if (event.target === this) closeModal('asmaModal');"
+    >
+      <div class="modal">
+        <div class="modal-head">
+          <h3>🌟 99 Names of Allah — أسماء الله الحسنى</h3>
+          <button class="modal-close" onclick="closeModal('asmaModal')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="asma-grid" id="asmaGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHORTCUTS MODAL -->
+    <div
+      class="modal-bg"
+      id="shortcutsModal"
+      onclick="if (event.target === this) closeModal('shortcutsModal');"
+    >
+      <div class="modal">
+        <div class="modal-head">
+          <h3>⌨ Keyboard Shortcuts</h3>
+          <button class="modal-close" onclick="closeModal('shortcutsModal')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <table
+            style="width: 100%; border-collapse: collapse; font-size: 0.95rem"
+          >
+            <tr style="border-bottom: 1px solid var(--border2)">
+              <td
+                style="
+                  padding: 10px 0;
+                  color: var(--muted);
+                  font-family: Cinzel, serif;
+                  font-size: 0.75rem;
+                "
+              >
+                → / .
+              </td>
+              <td style="padding: 10px">Next Ayah</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border2)">
+              <td
+                style="
+                  padding: 10px 0;
+                  color: var(--muted);
+                  font-family: Cinzel, serif;
+                  font-size: 0.75rem;
+                "
+              >
+                ← / ,
+              </td>
+              <td style="padding: 10px">Previous Ayah</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border2)">
+              <td
+                style="
+                  padding: 10px 0;
+                  color: var(--muted);
+                  font-family: Cinzel, serif;
+                  font-size: 0.75rem;
+                "
+              >
+                Space
+              </td>
+              <td style="padding: 10px">Play / Pause Audio</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border2)">
+              <td
+                style="
+                  padding: 10px 0;
+                  color: var(--muted);
+                  font-family: Cinzel, serif;
+                  font-size: 0.75rem;
+                "
+              >
+                B
+              </td>
+              <td style="padding: 10px">Bookmark Ayah</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border2)">
+              <td
+                style="
+                  padding: 10px 0;
+                  color: var(--muted);
+                  font-family: Cinzel, serif;
+                  font-size: 0.75rem;
+                "
+              >
+                C
+              </td>
+              <td style="padding: 10px">Copy Ayah</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border2)">
+              <td
+                style="
+                  padding: 10px 0;
+                  color: var(--muted);
+                  font-family: Cinzel, serif;
+                  font-size: 0.75rem;
+                "
+              >
+                T
+              </td>
+              <td style="padding: 10px">Open Tafsir</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border2)">
+              <td
+                style="
+                  padding: 10px 0;
+                  color: var(--muted);
+                  font-family: Cinzel, serif;
+                  font-size: 0.75rem;
+                "
+              >
+                N / D
+              </td>
+              <td style="padding: 10px">Toggle Night / Day Mode</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border2)">
+              <td
+                style="
+                  padding: 10px 0;
+                  color: var(--muted);
+                  font-family: Cinzel, serif;
+                  font-size: 0.75rem;
+                "
+              >
+                F
+              </td>
+              <td style="padding: 10px">Toggle Focus Mode</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border2)">
+              <td
+                style="
+                  padding: 10px 0;
+                  color: var(--muted);
+                  font-family: Cinzel, serif;
+                  font-size: 0.75rem;
+                "
+              >
+                M
+              </td>
+              <td style="padding: 10px">Toggle Memorize Mode</td>
+            </tr>
+            <tr>
+              <td
+                style="
+                  padding: 10px 0;
+                  color: var(--muted);
+                  font-family: Cinzel, serif;
+                  font-size: 0.75rem;
+                "
+              >
+                R
+              </td>
+              <td style="padding: 10px">Random Ayah</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTES MODAL (Global Notes) -->
+    <div
+      class="modal-bg"
+      id="notesModal"
+      onclick="if (event.target === this) closeModal('notesModal');"
+    >
+      <div class="modal">
+        <div class="modal-head">
+          <h3>📝 My Notes</h3>
+          <button class="modal-close" onclick="closeModal('notesModal')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body" id="notesBody"></div>
+      </div>
+    </div>
+
+    <!-- READING PROGRESS MODAL -->
+    <div
+      class="modal-bg"
+      id="progressModal"
+      onclick="if (event.target === this) closeModal('progressModal');"
+    >
+      <div class="modal" style="max-width: 500px">
+        <div class="modal-head">
+          <h3>📊 Reading Progress</h3>
+          <button class="modal-close" onclick="closeModal('progressModal')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body" id="progressBody"></div>
+      </div>
+    </div>
+
+    <!-- ╔══════════════════════════════════════════╗ -->
+    <!-- ║               MAIN APP                   ║ -->
+    <!-- ╚══════════════════════════════════════════╝ -->
+    <div id="app">
+      <!-- TOP NAV -->
+      <nav class="topnav">
+        <div class="nav-logo-group">
+          <div class="nav-emblem">ن</div>
+          <div class="nav-brand-text">
+            <div class="n1">NOOR</div>
+            <div class="n2">نور · القرآن الكريم</div>
+          </div>
+        </div>
+
+        <div class="nav-tabs" id="navTabs">
+          <div
+            class="nav-tab active"
+            data-tab="read"
+            onclick="switchTab('read')"
+          >
+            Read
+          </div>
+          <div class="nav-tab" data-tab="prayer" onclick="switchTab('prayer')">
+            Prayer
+          </div>
+          <div class="nav-tab" data-tab="dhikr" onclick="switchTab('dhikr')">
+            Dhikr
+          </div>
+          <div class="nav-tab" data-tab="tools" onclick="switchTab('tools')">
+            Tools
+          </div>
+        </div>
+
+        <div class="nav-actions">
+          <div
+            class="nav-icon-btn"
+            id="btnNight"
+            onclick="toggleNight()"
+            data-tip="Night mode"
+          >
+            <i class="fa-regular fa-moon"></i>
+          </div>
+          <div
+            class="nav-icon-btn"
+            id="btnSepia"
+            onclick="toggleSepia()"
+            data-tip="Sepia mode"
+          >
+            <i class="fa-solid fa-droplet"></i>
+          </div>
+          <div
+            class="nav-icon-btn"
+            id="btnFocus"
+            onclick="toggleFocus()"
+            data-tip="Focus mode"
+          >
+            <i class="fa-regular fa-eye"></i>
+          </div>
+          <div
+            class="nav-icon-btn"
+            id="btnTranslit"
+            onclick="toggleTranslit()"
+            data-tip="Transliteration"
+          >
+            <i class="fa-solid fa-font"></i>
+          </div>
+          <div
+            class="nav-icon-btn"
+            id="btnMemorize"
+            onclick="toggleMemorize()"
+            data-tip="Memorize mode"
+          >
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <div
+            class="nav-icon-btn"
+            onclick="
+              openModal('progressModal');
+              buildProgressModal();
+            "
+            data-tip="Progress"
+          >
+            <i class="fa-solid fa-chart-line"></i>
+          </div>
+          <div class="nav-lang">
+            <i class="fa-solid fa-earth-asia"></i>
+            <select id="langSelect" onchange="onLangChange()">
+              <option value="en.asad">English (Asad)</option>
+              <option value="en.sahih">English (Sahih)</option>
+              <option value="bn.bengali">বাংলা</option>
+              <option value="ur.maududi">اردو</option>
+              <option value="fr.hamidullah">Français</option>
+              <option value="id.indonesian">Bahasa</option>
+              <option value="es.cortes">Español</option>
+              <option value="tr.diyanet">Türkçe</option>
+              <option value="de.aburida">Deutsch</option>
+            </select>
+          </div>
+        </div>
+      </nav>
+
+      <!-- RESUME BAR -->
+      <div class="resume-bar" id="resumeBar" onclick="goResume()">
+        <span>📌 Continue reading: <strong id="resumeLabel">—</strong></span>
+        <span style="color: var(--gold)">Resume reading →</span>
+      </div>
+
+      <!-- VERSE OF THE DAY -->
+      <div class="votd" id="votdBanner" onclick="goVotd()">
+        <div class="votd-icon">✨</div>
+        <div class="votd-text">
+          <strong id="votdLabel">Verse of the Day</strong>
+          <div class="votd-ar" id="votdAr">Loading…</div>
+        </div>
+      </div>
+
+      <!-- GLOBAL SEARCH -->
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          type="text"
+          id="globalSearch"
+          placeholder="Search surahs, ayahs, topics…"
+          oninput="onGlobalSearch()"
+        />
+        <div class="search-clear" id="searchClear" onclick="clearSearch()">
+          ✕ clear
+        </div>
+      </div>
+
+      <!-- HERO BANNER -->
+      <div class="hero" id="heroBanner">
+        <div class="hero-pattern"></div>
+        <div class="hero-glow"></div>
+        <div class="hero-glow2"></div>
+        <div class="hero-content">
+          <div class="hero-left">
+            <div class="hero-surah-ar" id="heroAr">الفاتحة</div>
+            <div class="hero-surah-en" id="heroEn">
+              Al-Fatihah · The Opening
+            </div>
+            <div class="hero-chips">
+              <span class="hero-chip" id="heroType">Meccan</span>
+              <span class="hero-chip" id="heroJuz">Juz 1</span>
+              <span class="hero-chip highlight" id="heroPage">Page 1</span>
+            </div>
+          </div>
+          <div class="hero-right">
+            <div class="hero-count" id="heroN">1</div>
+            <div class="hero-count-sub">
+              of <span id="heroTotal">7</span> ayahs
+            </div>
+            <div class="hero-bar">
+              <div class="hero-bar-fill" id="heroFill" style="width: 14%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN LAYOUT -->
+      <div class="layout">
+        <!-- ════ LEFT: SURAH SIDEBAR ════ -->
+        <div class="card surah-sidebar">
+          <div class="card-head">
+            <i class="fa-solid fa-list-ol"></i>
+            <span class="card-head-title">114 Surahs</span>
+          </div>
+          <div class="surah-search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input
+              type="text"
+              id="surahSearch"
+              placeholder="Search surah…"
+              oninput="filterSurahs()"
+            />
+          </div>
+          <div class="surah-list" id="surahList">
+            <div style="padding: 28px; text-align: center; color: var(--muted)">
+              <i
+                class="fa-solid fa-spinner fa-spin"
+                style="color: var(--gold); font-size: 1.4rem"
+              ></i
+              ><br /><br />Loading Surahs…
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ CENTER: READER ════ -->
+        <div class="card reader" id="readerPanel">
+          <div class="reader-bar">
+            <div class="rbar-left">
+              <div class="rbar-badge" id="rbAyah">Ayah 1 / 7</div>
+              <div class="rbar-badge" id="rbSurah">Surah 1</div>
+            </div>
+            <div class="rbar-nav">
+              <div
+                class="rbar-btn"
+                onclick="prevAyah()"
+                data-tip="Previous (←)"
+              >
+                <i class="fa-solid fa-chevron-left"></i>
+              </div>
+              <div class="rbar-btn" onclick="nextAyah()" data-tip="Next (→)">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="bismillah-row" id="bismillahRow">
+            بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+          </div>
+
+          <div class="ayah-zone">
+            <div class="arabic-area" id="arabicArea" dir="rtl">
+              <div
+                class="memorize-overlay"
+                id="memorizeOverlay"
+                onclick="revealMemorize()"
+              >
+                اضغط للكشف · Tap to reveal
+              </div>
+              <span class="ayah-badge" id="ayahBadge">١</span>
+              بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+            </div>
+            <div class="translit-area" id="translitArea">
+              Bismillāhi r-raḥmāni r-raḥīm
+            </div>
+            <div class="translation-area" id="transArea">
+              In the name of Allah, the Entirely Merciful, the Especially
+              Merciful.
+            </div>
+
+            <!-- inline note area -->
+            <div class="notes-area" id="inlineNotes">
+              <textarea
+                id="noteTextarea"
+                placeholder="Add your personal note for this ayah…"
+                oninput="saveNote()"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- AUDIO PLAYER -->
+          <div class="audio-wrap">
+            <div class="audio-label">
+              <i class="fa-regular fa-headphones"></i> Recitation
+            </div>
+            <div class="audio-controls-row">
+              <button class="play-big" id="playBtn" onclick="togglePlay()">
+                <i class="fa-solid fa-play" id="playIcon"></i>
+              </button>
+              <div class="audio-scrub-wrap">
+                <input
+                  type="range"
+                  class="audio-scrub"
+                  id="audioScrub"
+                  value="0"
+                  min="0"
+                  max="100"
+                  oninput="seekAudio()"
+                />
+                <div class="audio-times">
+                  <span id="timeCur">0:00</span><span id="timeTot">0:00</span>
+                </div>
+              </div>
+              <select
+                class="reciter-pick"
+                id="reciterSel"
+                onchange="loadAudio()"
+              >
+                <option value="ar.alafasy">Alafasy</option>
+                <option value="ar.minshawi">Minshawi</option>
+                <option value="ar.abdullahbasfar">Basfar</option>
+                <option value="ar.muhammadayyoub">Ayyoub</option>
+                <option value="ar.hudhaify">Hudhaify</option>
+                <option value="ar.mahermuaiqly">Muaiqly</option>
+              </select>
+              <div class="audio-extra">
+                <div
+                  class="aud-ctrl on"
+                  id="btnAuto"
+                  onclick="toggleAuto()"
+                  data-tip="Auto-next"
+                >
+                  <i class="fa-regular fa-circle-play"></i>
+                </div>
+                <div
+                  class="aud-ctrl"
+                  id="btnRepeat"
+                  onclick="toggleRepeat()"
+                  data-tip="Repeat"
+                >
+                  <i class="fa-solid fa-rotate-right"></i>
+                </div>
+                <div
+                  class="speed-badge"
+                  onclick="cycleSpeed()"
+                  id="speedBadge"
+                  data-tip="Playback speed"
+                >
+                  1×
+                </div>
+              </div>
+            </div>
+            <audio id="audioEl" style="display: none"></audio>
+          </div>
+
+          <!-- ACTION BAR -->
+          <div class="action-row">
+            <div class="act-btn" onclick="copyAyah()" data-tip="Copy (C)">
+              <i class="fa-regular fa-copy"></i> Copy
+            </div>
+            <div
+              class="act-btn"
+              onclick="bookmarkAyah()"
+              data-tip="Bookmark (B)"
+            >
+              <i class="fa-regular fa-bookmark"></i> Bookmark
+            </div>
+            <div class="act-btn" onclick="openTafsir()" data-tip="Tafsir (T)">
+              <i class="fa-regular fa-message-lines"></i> Tafsir
+            </div>
+            <div
+              class="act-btn"
+              onclick="toggleNote()"
+              data-tip="Personal note"
+            >
+              <i class="fa-regular fa-note-sticky"></i> Note
+            </div>
+            <div
+              class="act-btn"
+              onclick="shareWA()"
+              data-tip="Share on WhatsApp"
+            >
+              <i class="fa-brands fa-whatsapp"></i> Share
+            </div>
+            <div class="act-btn" onclick="randomAyah()" data-tip="Random (R)">
+              <i class="fa-solid fa-shuffle"></i> Random
+            </div>
+            <div class="act-btn" onclick="cycleFontSize()" data-tip="Font size">
+              <i class="fa-regular fa-text-height"></i> Font
+            </div>
+            <div
+              class="act-btn"
+              onclick="
+                openModal('asmaModal');
+                buildAsmaGrid();
+              "
+              data-tip="99 Names of Allah"
+            >
+              <i class="fa-solid fa-star-and-crescent"></i> Asma
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ RIGHT COLUMN ════ -->
+        <div class="right-col" id="rightCol">
+          <!-- Hijri Calendar -->
+          <div class="hijri-card">
+            <div class="hijri-month" id="hijriMonth">—</div>
+            <div class="hijri-full" id="hijriFull">Islamic Calendar</div>
+            <div class="hijri-greg" id="hijriGreg">—</div>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-val" id="statAyahs">0</div>
+              <div class="stat-lbl">Ayahs Read</div>
+            </div>
+            <div
+              class="stat-box"
+              style="background: linear-gradient(135deg, #4a1a08, #7a2a10)"
+            >
+              <div class="stat-val" id="statStreak">0🔥</div>
+              <div class="stat-lbl">Day Streak</div>
+            </div>
+            <div
+              class="stat-box"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  var(--lapis),
+                  var(--lapis2)
+                );
+              "
+            >
+              <div class="stat-val" id="statSurahs">0</div>
+              <div class="stat-lbl">Surahs</div>
+            </div>
+            <div
+              class="stat-box"
+              style="background: linear-gradient(135deg, #3a1060, #5c1890)"
+            >
+              <div class="stat-val" id="statBm">0</div>
+              <div class="stat-lbl">Bookmarks</div>
+            </div>
+          </div>
+
+          <!-- Prayer Times -->
+          <div class="prayer-card">
+            <div class="prayer-head">
+              <div>
+                <div class="prayer-head-title">🕌 Prayer Times</div>
+                <div class="prayer-head-loc" id="prayerLoc">
+                  Detecting location…
+                </div>
+              </div>
+              <i
+                class="fa-regular fa-clock"
+                style="color: rgba(200, 200, 255, 0.4)"
+              ></i>
+            </div>
+            <div class="p-list" id="prayerList">
+              <div
+                style="
+                  padding: 14px;
+                  text-align: center;
+                  color: rgba(200, 200, 255, 0.4);
+                  font-size: 0.85rem;
+                "
+              >
+                Loading…
+              </div>
+            </div>
+            <div class="p-countdown">
+              <span id="nextPrayerCountdown">—</span>until next prayer
+            </div>
+          </div>
+
+          <!-- Dhikr Counter -->
+          <div class="dhikr-card" onclick="dhikrTap()">
+            <div class="dhikr-label">🌿 DHIKR COUNTER · التسبيح</div>
+            <div class="dhikr-ar" id="dhikrAr">سُبْحَانَ اللَّه</div>
+            <div class="dhikr-num" id="dhikrNum">0</div>
+            <div class="dhikr-target-bar">
+              <div
+                class="dhikr-target-fill"
+                id="dhikrFill"
+                style="width: 0%"
+              ></div>
+            </div>
+            <div class="dhikr-hint">
+              Tap · Target: <span id="dhikrTgt">33</span>
+            </div>
+            <div
+              class="dhikr-reset-btn"
+              onclick="
+                event.stopPropagation();
+                resetDhikr();
+              "
+            >
+              ⟳ reset
+            </div>
+          </div>
+
+          <!-- Qibla Compass -->
+          <div class="qibla-card">
+            <div class="qibla-title">🧭 QIBLA DIRECTION</div>
+            <div class="compass">
+              <div class="compass-ring">
+                <div class="compass-dirs">
+                  <span class="cn">N</span><span class="cs">S</span>
+                  <span class="ce">E</span><span class="cw">W</span>
+                </div>
+                <div class="compass-face">
+                  <svg
+                    class="compass-needle-svg"
+                    id="qiblaNeedle"
+                    viewBox="0 0 10 60"
+                  >
+                    <polygon points="5,0 0,30 5,28 10,30" fill="#7a1428" />
+                    <polygon points="5,28 0,30 5,60 10,30" fill="#888" />
+                  </svg>
+                  <div class="compass-kaaba-icon">🕋</div>
+                </div>
+              </div>
+            </div>
+            <div class="qibla-deg" id="qiblaDeg">—°</div>
+            <div class="qibla-sub" id="qiblaSub">Allow location for Qibla</div>
+          </div>
+
+          <!-- Daily Dua -->
+          <div class="dua-card">
+            <div class="dua-head">
+              <i
+                class="fa-regular fa-hands-praying"
+                style="color: var(--gold)"
+              ></i>
+              DAILY DUA
+            </div>
+            <div class="dua-ar" id="duaAr">
+              رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً
+            </div>
+            <div class="dua-tr" id="duaTr">
+              "Our Lord, give us in this world that which is good…"
+            </div>
+            <div class="dua-btns">
+              <div class="dua-btn" onclick="prevDua()">← Prev</div>
+              <div class="dua-btn" onclick="copyDua()">
+                <i class="fa-regular fa-copy"></i> Copy
+              </div>
+              <div class="dua-btn" onclick="nextDua()">Next →</div>
+            </div>
+          </div>
+
+          <!-- Bookmarks -->
+          <div class="card bookmarks-panel">
+            <div class="card-head">
+              <i class="fa-regular fa-bookmark"></i>
+              <span class="card-head-title">Bookmarks</span>
+              <span
+                style="
+                  margin-left: auto;
+                  font-size: 0.7rem;
+                  color: rgba(224, 192, 106, 0.5);
+                  cursor: pointer;
+                "
+                onclick="
+                  openModal('notesModal');
+                  buildNotesModal();
+                "
+                >📝 Notes</span
+              >
+            </div>
+            <div class="bm-list" id="bmList">
+              <div class="bm-empty">No bookmarks yet</div>
+            </div>
+          </div>
+        </div>
+        <!-- end right-col -->
+      </div>
+      <!-- end layout -->
+    </div>
+    <!-- end app -->
+
+    <script src="quran.js"></script>
+  </body>
+</html>
